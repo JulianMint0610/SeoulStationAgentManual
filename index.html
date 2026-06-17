@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#2563eb" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="https://picsum.photos/seed/train/192/192" />
+    <title>서울역 실전 지식 저장소(테스트용)</title>
+    <script>
+      // 플랫폼 주입 배너 축소/제거 정밀 분석기
+      (function() {
+        function compressPlatformBanners() {
+          const walker = document.createTreeWalker(
+            document.body || document.documentElement,
+            NodeFilter.SHOW_TEXT,
+            null
+          );
+          
+          let node;
+          const candidates = [];
+          while (node = walker.nextNode()) {
+            const val = node.nodeValue;
+            if (
+              val.includes("developed by another user") ||
+              val.includes("inaccurate or unsafe") ||
+              val.includes("서비스 약관") ||
+              val.includes("약관이 업데이트되었습니다") ||
+              val.includes("Report legal issue")
+            ) {
+              candidates.push(node);
+            }
+          }
+
+          candidates.forEach(textNode => {
+            let el = textNode.parentElement;
+            if (!el) return;
+            
+            // fixed 또는 absolute 컨테이너 중 배너 역할을 하는 최종 껍데기 조상 찾기
+            let container = el;
+            let depth = 0;
+            while (container && container !== document.body && depth < 8) {
+              const pos = window.getComputedStyle(container).position;
+              const hasOverlayClass = Array.from(container.classList || []).some(cls => 
+                cls.includes('banner') || cls.includes('alert') || cls.includes('toast') || cls.includes('cookie') || cls.includes('popup')
+              );
+              
+              if (pos === 'fixed' || pos === 'absolute' || hasOverlayClass) {
+                break;
+              }
+              if (container.parentElement) {
+                container = container.parentElement;
+              } else {
+                break;
+              }
+              depth++;
+            }
+
+            if (container && container !== document.body) {
+              if (!container.dataset.hided) {
+                container.dataset.hided = "true";
+                // 아주 깔끔한 서브 우회 원형 단추로 초소형 축소
+                container.style.transition = "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)";
+                container.style.transform = "scale(0.08)";
+                container.style.transformOrigin = "bottom right";
+                container.style.opacity = "0.08";
+                container.style.pointerEvents = "auto";
+                container.style.maxHeight = "24px";
+                container.style.maxWidth = "24px";
+                container.style.minHeight = "0px";
+                container.style.minWidth = "0px";
+                container.style.borderRadius = "9999px";
+                container.style.overflow = "hidden";
+                container.style.border = "2px solid #ef4444";
+                container.style.background = "#1e293b";
+                container.style.boxShadow = "0 4px 12px rgba(0,0,0,0.5)";
+                // 모바일에서 구석에 처박기
+                container.style.bottom = "8px";
+                container.style.right = "8px";
+                container.style.left = "auto";
+                container.style.top = "auto";
+                container.style.zIndex = "999999";
+
+                container.onmouseenter = function() {
+                  container.style.transform = "scale(0.85)";
+                  container.style.opacity = "1";
+                  container.style.maxWidth = "350px";
+                  container.style.maxHeight = "150px";
+                  container.style.borderRadius = "12px";
+                };
+                container.onmouseleave = function() {
+                  container.style.transform = "scale(0.08)";
+                  container.style.opacity = "0.08";
+                  container.style.maxWidth = "24px";
+                  container.style.maxHeight = "24px";
+                  container.style.borderRadius = "9999px";
+                };
+              }
+            } else {
+              // 컨테이너를 명확히 찾기 힘든 경우 부모 요소 바로 블러처리 및 숨김
+              el.style.display = "none";
+            }
+          });
+        }
+
+        // DOM이 생성되는 과정과 마운트 이후 지속적으로 실시간 감시
+        const observer = new MutationObserver(function() {
+          compressPlatformBanners();
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+          compressPlatformBanners();
+          observer.observe(document.body, { childList: true, subtree: true });
+        });
+        
+        // 윈도우 로드 이후에도 몇번 재실행
+        window.addEventListener("load", function() {
+          compressPlatformBanners();
+          setTimeout(compressPlatformBanners, 1000);
+          setTimeout(compressPlatformBanners, 3000);
+          setTimeout(compressPlatformBanners, 6000);
+        });
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
