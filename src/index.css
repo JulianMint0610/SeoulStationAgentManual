@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+@layer base {
+  html, body {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+    /* Keep-all ensures Korean words do not wrap awkwardly mid-word, preventing layout breakage */
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+}

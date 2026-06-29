@@ -11,6 +11,16 @@ export interface ManualItem {
   arrivalDesc?: string;
   departureTips?: string[];
   arrivalTips?: string[];
+  departureVideoUrl?: string;
+  arrivalVideoUrl?: string;
+  manualTitle?: string;
+  manualDesc?: string;
+  manualTips?: string[];
+  manualVideoUrl?: string;
+  newLiftTitle?: string;
+  newLiftDesc?: string;
+  newLiftTips?: string[];
+  newLiftVideoUrl?: string;
 }
 
 export interface Category {
