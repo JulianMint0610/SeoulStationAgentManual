@@ -138,7 +138,7 @@ export default function HelperNoteVisualizer() {
       shortName: '플랫폼/호차&좌석',
       position: '중앙',
       example: '4 / 2',
-      description: '탑승할 열차의 호차와 지원 대상 좌석(또는 고객의 수) 정보를 나타냅니다.',
+      description: '탑승할 열차의 플랫폼과 호차의 정보를 나타냅니다.',
       details: []
     },
     {
@@ -147,7 +147,7 @@ export default function HelperNoteVisualizer() {
       shortName: '서비스 종류',
       position: '중앙 하단',
       example: '리프트',
-      description: '요청되는 휠체어 관련 서비스 형태를 나타냅니다.',
+      description: '(혹은 휠필/시각) 교통약자 관련 서비스 형태입니다.',
       details: []
     },
     {

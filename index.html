@@ -9,8 +9,25 @@
     <link rel="apple-touch-icon" href="https://picsum.photos/seed/train/192/192" />
     <title>서울역 업무 지식 아카이브</title>
     <script>
-      // 플랫폼 주입 배너 축소/제거 정밀 분석기
+      // 플랫폼 주입 배너 축소/제거 정밀 분석기 (성능 극대화 최적화 버전)
       (function() {
+        // 1. 외부 브라우저(Vercel 배포 본, 일반 모바일 크롬/사파리 단독 탭)에서는 감시 장치를 완전히 차단하여 메모리/CPU 점유율 0% 유지
+        const isIframe = window.self !== window.top;
+        if (!isIframe) {
+          console.log("[Performance Boost] Running in a top-level window. Skipping platform banner manager.");
+          return;
+        }
+
+        // 2. 디바운스 메커니즘을 적용하여 초당 수십 번의 DOM 렌더링(시계 갱신, 마우스 호버 등) 시 발생하는 성능 병목을 제거
+        let debounceTimer = null;
+        function scheduleCompress() {
+          if (debounceTimer) return;
+          debounceTimer = setTimeout(function() {
+            compressPlatformBanners();
+            debounceTimer = null;
+          }, 1500); // 1.5초 간격으로 스케줄링하여 무전기 시계 갱신 주기(1s)보다 여유 있게 설정
+        }
+
         function compressPlatformBanners() {
           const walker = document.createTreeWalker(
             document.body || document.documentElement,
@@ -104,9 +121,9 @@
           });
         }
 
-        // DOM이 생성되는 과정과 마운트 이후 지속적으로 실시간 감시
+        // DOM이 생성되는 과정과 마운트 이후 지속적으로 실시간 감시 (디바운스 적용)
         const observer = new MutationObserver(function() {
-          compressPlatformBanners();
+          scheduleCompress();
         });
 
         document.addEventListener("DOMContentLoaded", function() {

@@ -15,7 +15,13 @@ import {
   ChevronRight,
   Info,
   PlayCircle,
-  ExternalLink
+  ExternalLink,
+  Check,
+  X,
+  CheckCircle2,
+  XCircle,
+  Zap,
+  Sparkles
 } from 'lucide-react';
 
 interface InteractiveStationMapProps {
@@ -31,6 +37,8 @@ export default function InteractiveStationMap({ itemId }: InteractiveStationMapP
     return <HelperNoteVisualizer />;
   } else if (itemId === 'cm-2') {
     return <RadioBlueprint />;
+  } else if (itemId === 'etc-3') {
+    return <BoardingRouteOptimizer />;
   }
   return null;
 }
@@ -533,7 +541,12 @@ function SeoulStationLayoutMap() {
       <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 shadow-2xl space-y-6">
         <div className="flex items-center gap-2.5 border-b border-slate-800 pb-3">
           <Map className="w-5 h-5 text-blue-400 animate-pulse" />
-          <h3 className="text-base md:text-lg font-black tracking-tight">주요 목적지 동선 안내</h3>
+          <h3 className="text-base md:text-lg font-black tracking-tight flex items-center flex-wrap gap-2">
+            <span>주요 목적지 동선 안내</span>
+            <span className="text-[10px] md:text-xs text-slate-400 font-bold tracking-normal font-sans">
+              (이용 빈도가 높은 순으로 나열했습니다.)
+            </span>
+          </h3>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
@@ -994,7 +1007,7 @@ function RadioBlueprint() {
       desc: '상단 안테나 바로 오른쪽에 솟아있는 세로 홈 형태의 회전형 다이얼 조절기입니다.',
       rules: [
         '기능: 서울역 사회복무요원 및 역무팀이 사용하는 채널 그룹(예: 운용, 종합안내, 출도착 등)을 세팅할 때 사용합니다.',
-        "세팅법: 무전 채널은 '7. 작업'채널에 고정해놓도록 합니다.",
+        "세팅법: 무전 채널은 '7. 작업' 채널에 고정해놓도록 합니다.",
         "주의사항: 업무 중 '1. 운전' 채널은 가급적 사용하지 않도록 합니다."
       ],
       tips: ''
@@ -1371,6 +1384,367 @@ function RadioBlueprint() {
             </AnimatePresence>
 
           </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+/* ==========================================================================
+   5. BOARDING ROUTE OPTIMIZER (etc-3)
+   ========================================================================== */
+function BoardingRouteOptimizer() {
+  const [animKey] = useState(0);
+
+  return (
+    <div className="mt-8 bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl relative overflow-hidden">
+      {/* Background radial glowing gradients for immersive tech theme */}
+      <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/5 rounded-full blur-[90px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-500/5 rounded-full blur-[90px] pointer-events-none" />
+
+      <div className="relative space-y-6">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+          <div>
+            <h3 className="text-xl md:text-2xl font-black text-white tracking-tight flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-emerald-400 animate-pulse" /> 탑승 동선 최적화 시뮬레이션
+            </h3>
+            <p className="text-xs text-slate-400 mt-1 font-semibold">
+              좌석 위치에 따라 승강장에서 어떤 출입구로 탑승하는 것이 더 빠른지 직관적으로 가이드합니다.
+            </p>
+          </div>
+          <div className="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800/80 text-[11px] font-bold text-slate-400 self-start md:self-auto">
+            <span>실무 노하우</span>
+            <span className="w-1 h-1 bg-slate-700 rounded-full" />
+            <span className="text-emerald-400">7호차 15C 좌석 사례</span>
+          </div>
+        </div>
+
+        {/* Informational Warning / Core Concept */}
+        <div className="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-4 flex gap-3.5 items-start">
+          <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0 text-blue-400 border border-blue-500/15">
+            <Info className="w-4 h-4" />
+          </div>
+          <div className="space-y-1">
+            <h4 className="text-xs font-black text-slate-300">💡 왜 8호차 출입구로 들어가는 것이 더 적절할까요?</h4>
+            <p className="text-xs text-slate-400 font-semibold leading-relaxed">
+              KTX-산천 7호차 15C 좌석은 객실의 가장 동쪽 끝(8호차 연결 통로 바로 앞)에 위치해 있습니다. 
+              7호차 전용 출입구는 객실 서쪽 끝에 있으므로, 7호차로 승차하면 객실 복도를 따라 길게 이동해야 하는 반면, 
+              <strong> 8호차 출입구로 승차하면 들어가자마자 7호차 15C 좌석이 눈앞에 위치</strong>합니다.
+            </p>
+          </div>
+        </div>
+
+        {/* Interactive Diagram Board */}
+        <div className="bg-slate-950/80 border border-slate-800/60 rounded-2xl p-4 md:p-6 flex flex-col items-center">
+          
+          {/* Top Info Banner */}
+          <div className="w-full flex justify-between items-center text-[10px] md:text-xs font-bold text-slate-400 mb-4 px-1">
+            <span className="bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-md text-slate-400 font-bold uppercase tracking-wider">
+              동선 다이어그램
+            </span>
+            <span className="text-blue-400 bg-blue-500/10 border border-blue-500/15 px-2.5 py-1 rounded-md">
+              7호차 15C 좌석 기준
+            </span>
+          </div>
+
+          {/* SVG Canvas drawing train, arrows, X and O */}
+          <div className="w-full max-w-xl bg-slate-950 border border-slate-900 rounded-xl relative py-6 flex flex-col items-center justify-center overflow-hidden">
+            
+            <svg 
+              viewBox="0 0 600 340" 
+              className="w-full h-auto select-none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              {/* Definitions for Gradients & Markers */}
+              <defs>
+                <linearGradient id="trainGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#1e293b" />
+                  <stop offset="50%" stopColor="#334155" />
+                  <stop offset="100%" stopColor="#1e293b" />
+                </linearGradient>
+                <linearGradient id="glowRed" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#ef4444" />
+                  <stop offset="100%" stopColor="#7f1d1d" />
+                </linearGradient>
+                <linearGradient id="glowGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#10b981" />
+                  <stop offset="100%" stopColor="#064e3b" />
+                </linearGradient>
+                {/* Glow Filters */}
+                <filter id="neonGlowRed" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+                <filter id="neonGlowGreen" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+              </defs>
+
+              {/* Grid backdrop for blueprint style */}
+              <pattern id="gridPattern" width="20" height="20" patternUnits="userSpaceOnUse">
+                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1e293b" strokeWidth="0.5" />
+              </pattern>
+              <rect width="600" height="340" fill="url(#gridPattern)" rx="10" />
+
+              {/* ==================== TRAIN DRAWING ==================== */}
+              {/* Outer track line */}
+              <line x1="50" y1="180" x2="550" y2="180" stroke="#475569" strokeWidth="2" strokeDasharray="5 5" />
+
+              {/* Train Car Body (Integrated Container) */}
+              {/* Left Side (Car 7) */}
+              <rect 
+                x="140" 
+                y="65" 
+                width="280" 
+                height="100" 
+                rx="12" 
+                fill="url(#trainGrad)" 
+                stroke="#475569" 
+                strokeWidth="2.5" 
+              />
+              {/* Right Side (Car 8) */}
+              <rect 
+                x="440" 
+                y="65" 
+                width="120" 
+                height="100" 
+                rx="12" 
+                fill="url(#trainGrad)" 
+                stroke="#475569" 
+                strokeWidth="2.5" 
+              />
+
+              {/* Connection Corridor (Vestibule) */}
+              <rect x="415" y="75" width="28" height="80" fill="#0f172a" stroke="#475569" strokeWidth="1.5" />
+              <line x1="415" y1="115" x2="443" y2="115" stroke="#334155" strokeWidth="2" />
+
+              {/* Windows - Car 7 */}
+              <g opacity="0.85">
+                <rect x="160" y="75" width="25" height="15" rx="3" fill="#090d16" stroke="#334155" strokeWidth="1" />
+                <rect x="200" y="75" width="25" height="15" rx="3" fill="#090d16" stroke="#334155" strokeWidth="1" />
+                <rect x="240" y="75" width="25" height="15" rx="3" fill="#090d16" stroke="#334155" strokeWidth="1" />
+                <rect x="280" y="75" width="25" height="15" rx="3" fill="#090d16" stroke="#334155" strokeWidth="1" />
+                <rect x="320" y="75" width="25" height="15" rx="3" fill="#090d16" stroke="#334155" strokeWidth="1" />
+                <rect x="360" y="75" width="25" height="15" rx="3" fill="#090d16" stroke="#334155" strokeWidth="1" />
+              </g>
+
+              {/* Windows - Car 8 */}
+              <g opacity="0.85">
+                <rect x="465" y="75" width="25" height="15" rx="3" fill="#090d16" stroke="#334155" strokeWidth="1" />
+                <rect x="510" y="75" width="25" height="15" rx="3" fill="#090d16" stroke="#334155" strokeWidth="1" />
+              </g>
+
+              {/* ==================== SEATS INSIDE CAR 7 ==================== */}
+              {/* Helper Seats (Regular) */}
+              <g opacity="0.4">
+                <rect x="165" y="125" width="14" height="14" rx="2.5" fill="#475569" />
+                <rect x="185" y="125" width="14" height="14" rx="2.5" fill="#475569" />
+                
+                <rect x="215" y="125" width="14" height="14" rx="2.5" fill="#475569" />
+                <rect x="235" y="125" width="14" height="14" rx="2.5" fill="#475569" />
+
+                <rect x="265" y="125" width="14" height="14" rx="2.5" fill="#475569" />
+                <rect x="285" y="125" width="14" height="14" rx="2.5" fill="#475569" />
+
+                <rect x="315" y="125" width="14" height="14" rx="2.5" fill="#475569" />
+                <rect x="335" y="125" width="14" height="14" rx="2.5" fill="#475569" />
+              </g>
+
+              {/* TARGET SEAT: 7호차 15C */}
+              <rect 
+                x="380" 
+                y="122" 
+                width="22" 
+                height="22" 
+                rx="5" 
+                fill="#3b82f6" 
+                stroke="#60a5fa" 
+                strokeWidth="1.5" 
+                className="animate-pulse"
+              />
+              <text x="391" y="136" fill="#ffffff" fontSize="9" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">
+                15C
+              </text>
+              
+              {/* Highlight Target Indicator Line & Text */}
+              <line x1="391" y1="116" x2="391" y2="103" stroke="#60a5fa" strokeWidth="1.5" />
+              <circle cx="391" cy="116" r="2" fill="#60a5fa" />
+              <rect x="356" y="86" width="70" height="16" rx="4" fill="#1e3a8a" stroke="#3b82f6" strokeWidth="1" />
+              <text x="391" y="97" fill="#93c5fd" fontSize="8" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">
+                고객 좌석 15C
+              </text>
+
+              {/* Labels above the train */}
+              <text x="280" y="45" fill="#94a3b8" fontSize="13" fontWeight="900" textAnchor="middle" fontFamily="sans-serif" letterSpacing="1.5">
+                7호차 (일반실)
+              </text>
+              <text x="500" y="45" fill="#64748b" fontSize="13" fontWeight="900" textAnchor="middle" fontFamily="sans-serif" letterSpacing="1.5">
+                8호차
+              </text>
+
+              {/* ==================== ROUTE PATH ARROWS ==================== */}
+              
+              {/* --- ROUTE 1: 7호차 왼쪽 입구 탑승 (빨간색) --- */}
+              {/* Background Path line (dimmed red) */}
+              <path 
+                d="M 100,280 L 100,115 L 145,115 L 375,115" 
+                fill="none" 
+                stroke="#ef4444" 
+                strokeWidth="2.5" 
+                strokeOpacity="0.15" 
+              />
+              
+              {/* Dynamic Animated Path Line */}
+              <motion.path
+                key={`route7-path-${animKey}`}
+                d="M 100,280 L 100,115 L 145,115 L 375,115"
+                fill="none"
+                stroke="#ef4444"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+                filter="url(#neonGlowRed)"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 2.2, ease: "linear" }}
+              />
+
+              {/* Red Path Arrow Head */}
+              <polygon points="144,115 137,110 137,120" fill="#ef4444" />
+              
+              {/* --- ROUTE 2: 8호차 오른쪽 입구 탑승 (초록색) --- */}
+              {/* Background Path line (dimmed green) */}
+              <path 
+                d="M 500,280 L 500,115 L 430,115 L 405,115" 
+                fill="none" 
+                stroke="#10b981" 
+                strokeWidth="2.5" 
+                strokeOpacity="0.15" 
+              />
+              
+              {/* Dynamic Animated Path Line */}
+              <motion.path
+                key={`route8-path-${animKey}`}
+                d="M 500,280 L 500,115 L 430,115 L 405,115"
+                fill="none"
+                stroke="#10b981"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+                filter="url(#neonGlowGreen)"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 0.8, ease: "linear" }}
+              />
+
+              {/* Green Path Arrow Head */}
+              <polygon points="431,115 438,110 438,120" fill="#10b981" />
+
+              {/* Passenger Animated Dot - Route 1 */}
+              <motion.circle
+                key={`route7-dot-${animKey}`}
+                r="7"
+                fill="#fca5a5"
+                stroke="#ef4444"
+                strokeWidth="2"
+                filter="url(#neonGlowRed)"
+                style={{
+                  motionPath: "path('M 100,280 L 100,115 L 145,115 L 375,115')"
+                }}
+                animate={{ offsetDistance: ["0%", "100%"] }}
+                transition={{ duration: 2.2, ease: "linear", repeat: Infinity }}
+              />
+
+              {/* Passenger Animated Dot - Route 2 */}
+              <motion.circle
+                key={`route8-dot-${animKey}`}
+                r="7"
+                fill="#a7f3d0"
+                stroke="#10b981"
+                strokeWidth="2"
+                filter="url(#neonGlowGreen)"
+                style={{
+                  motionPath: "path('M 500,280 L 500,115 L 430,115 L 405,115')"
+                }}
+                animate={{ offsetDistance: ["0%", "100%"] }}
+                transition={{ duration: 0.8, ease: "linear", repeat: Infinity }}
+              />
+
+              {/* ==================== X AND O LABELS ON VERTICAL SEGMENTS ==================== */}
+              {/* 7호차 쪽 빨간 X 표시 */}
+              <g transform="translate(100, 205)">
+                <circle cx="0" cy="0" r="18" fill="url(#glowRed)" stroke="#ef4444" strokeWidth="2.5" />
+                {/* Cross 'X' drawing */}
+                <line x1="-8" y1="-8" x2="8" y2="8" stroke="#ffffff" strokeWidth="3.5" strokeLinecap="round" />
+                <line x1="8" y1="-8" x2="-8" y2="8" stroke="#ffffff" strokeWidth="3.5" strokeLinecap="round" />
+              </g>
+              <rect x="50" y="230" width="100" height="16" rx="4" fill="#7f1d1d" opacity="0.8" />
+              <text x="100" y="241" fill="#fca5a5" fontSize="8" fontWeight="black" textAnchor="middle" fontFamily="sans-serif">
+                7호차 동선
+              </text>
+
+              {/* 8호차 쪽 초록 O 표시 */}
+              <g transform="translate(500, 205)">
+                <circle cx="0" cy="0" r="18" fill="url(#glowGreen)" stroke="#10b981" strokeWidth="2.5" />
+                {/* Circle 'O' drawing */}
+                <circle cx="0" cy="0" r="8" fill="none" stroke="#ffffff" strokeWidth="3.5" />
+              </g>
+              <rect x="450" y="230" width="100" height="16" rx="4" fill="#064e3b" opacity="0.8" />
+              <text x="500" y="241" fill="#a7f3d0" fontSize="8" fontWeight="black" textAnchor="middle" fontFamily="sans-serif">
+                8호차 동선
+              </text>
+
+              {/* Center Title label at the bottom of the diagram */}
+              <rect x="180" y="295" width="240" height="28" rx="6" fill="#0f172a" stroke="#1e293b" strokeWidth="1.5" />
+              <text 
+                x="300" 
+                y="314" 
+                fill="#f1f5f9" 
+                fontSize="12" 
+                fontWeight="bold" 
+                textAnchor="middle" 
+                fontFamily="sans-serif"
+                letterSpacing="1"
+              >
+                &lt;좌석이 7호차 15C인 경우&gt;
+              </text>
+
+            </svg>
+
+          </div>
+
+          {/* Simultaneous Route Information */}
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+            <div className="p-4 rounded-xl border bg-slate-950/40 border-slate-800/80 text-slate-300 flex items-start gap-3">
+              <div className="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center shrink-0 text-red-500 border border-red-500/20">
+                <XCircle className="w-5 h-5 text-red-500" />
+              </div>
+              <div className="space-y-1">
+                <span className="font-bold text-sm text-red-400 flex items-center gap-1.5">
+                  7호차 진입 경로
+                </span>
+                <p className="text-xs text-slate-400 font-semibold leading-relaxed">
+                  객실 내부의 복도를 따라 길게 통과해야 하므로 상대적으로 이동 동선이 깁니다.
+                </p>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl border bg-slate-950/40 border-slate-800/80 text-slate-300 flex items-start gap-3">
+              <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0 text-emerald-400 border border-emerald-500/20">
+                <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+              </div>
+              <div className="space-y-1">
+                <span className="font-bold text-sm text-emerald-400 flex items-center gap-1.5">
+                  8호차 진입 경로 (추천)
+                </span>
+                <p className="text-xs text-slate-400 font-semibold leading-relaxed">
+                  진입하자마자 15C 좌석이 위치해 있어 가장 단축된 동선으로 착석 가능합니다.
+                </p>
+              </div>
+            </div>
+          </div>
+
         </div>
 
       </div>

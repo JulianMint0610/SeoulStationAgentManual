@@ -366,7 +366,7 @@ export default function App() {
                      서울역 업무 <span className={isDarkMode ? "text-blue-400" : "text-blue-600"}>지식 아카이브</span>
                   </h2>
                   <p className={cn(
-                    "text-sm md:text-lg leading-relaxed transition-colors",
+                    "text-sm md:text-lg leading-relaxed transition-colors pt-4 md:pt-6",
                     isDarkMode ? "text-slate-400" : "text-slate-700"
                   )}>
                     21개월의 복무 노하우를 담았습니다.<br className="hidden md:block" />
@@ -824,12 +824,12 @@ export default function App() {
                              <p className={cn("text-sm leading-relaxed font-semibold transition-colors", isDarkMode ? "text-slate-300" : "text-slate-700")}>
                                {(() => {
                                  let content: any = tip;
-                                 if (tip.includes("'딱 5분간만 정차'")) {
-                                   const parts = tip.split("'딱 5분간만 정차'");
+                                 if (tip.includes("'약 5분간만 정차'")) {
+                                   const parts = tip.split("'약 5분간만 정차'");
                                    content = (
                                      <>
                                        {parts[0]}
-                                       <span className={isDarkMode ? "text-blue-400 font-extrabold" : "text-blue-600 font-extrabold"}>'딱 5분간만 정차'</span>
+                                       <span className={isDarkMode ? "text-blue-400 font-extrabold" : "text-blue-600 font-extrabold"}>'약 5분간만 정차'</span>
                                        {parts[1]}
                                      </>
                                    );
@@ -840,6 +840,34 @@ export default function App() {
                                        {parts[0]}
                                        <span className={isDarkMode ? "text-blue-400 font-extrabold" : "text-blue-600 font-extrabold"}>승무원 인계를 직접 할 필요가 없습니다.</span>
                                        {parts[1]}
+                                     </>
+                                   );
+                                 } else if (tip === "마무리: 복귀하면서 승무원에게 반드시 고객의 탑승정보를 인계합니다.(출발휠필과 동일!)") {
+                                   content = (
+                                     <span className={isDarkMode ? "text-blue-400 font-extrabold" : "text-blue-600 font-extrabold"}>
+                                       {tip}
+                                     </span>
+                                   );
+                                 } else if (tip === "나쁜 예: 승무원 인계 누락 후 미보고하여 하차역을 지나쳐 가는 경우 (매우 중요함)") {
+                                   content = (
+                                     <span className={isDarkMode ? "text-blue-400 font-extrabold" : "text-blue-600 font-extrabold"}>
+                                       {tip}
+                                     </span>
+                                   );
+                                 } else if (tip === "손잡이 고수: 안내 중에는 절대로 휠체어 손잡이에서 손을 떼지 마세요.") {
+                                   content = (
+                                     <span className={isDarkMode ? "text-blue-400 font-extrabold" : "text-blue-600 font-extrabold"}>
+                                       {tip}
+                                     </span>
+                                   );
+                                 } else if (tip.includes("임시 고정: 부득이하게 손을 떼야 한다면 반드시 브레이크를 걸고 '선로와 나란한 방향'")) {
+                                   const parts = tip.split("으로 세워둡니다.");
+                                   content = (
+                                     <>
+                                       <span className={isDarkMode ? "text-blue-400 font-extrabold" : "text-blue-600 font-extrabold"}>
+                                         {parts[0]}
+                                       </span>
+                                       으로 세워둡니다.{parts[1] || ''}
                                      </>
                                    );
                                  }
